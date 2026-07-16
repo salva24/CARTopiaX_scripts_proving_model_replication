@@ -1,1 +1,1 @@
-Sum of values: 573.8777495650835
+Sum of values: 2869.388747825414

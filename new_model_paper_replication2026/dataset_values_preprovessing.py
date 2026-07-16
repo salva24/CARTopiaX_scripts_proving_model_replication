@@ -6,14 +6,14 @@ import pandas as pd
 from scipy.interpolate import UnivariateSpline
 from numpy.polynomial import Polynomial
 
-INPUT_FILE = "no_treatment_no_cup_28000_24h.csv"
+INPUT_FILE = "no_treatment_with_cup_28000_24h.csv"
 POLYNOMIAL_DEGREE = 3
 NORMALIZE_CYLINDER = True
 
 X_MIN = 0
 X_MAX = 3000
 Y_MIN = 0
-Y_MAX = 40
+Y_MAX = 200
 
 N_SAMPLES = 20
 
