@@ -1,12 +1,27 @@
+# -----------------------------------------------------------------------------
+# Copyright (C) 2026 Salvador de la Torre Gonzalez
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# -----------------------------------------------------------------------------
+
+
 import os
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from scipy.interpolate import UnivariateSpline
-from numpy.polynomial import Polynomial
 
-INPUT_FILE = "no_treatment_with_cup_28000_24h.csv"
+INPUT_FILE = "no_treatment_no_cup_2800_72h.csv"
 POLYNOMIAL_DEGREE = 3
 NORMALIZE_CYLINDER = True
 
@@ -108,9 +123,3 @@ if COMPUTE_TOTAL_NUMBER:
     output_file_sum = os.path.splitext(INPUT_FILE)[0] + "_sum_values_100_split.txt"
     with open(output_file_sum, "w") as f:
         f.write(f"Sum of values: {sum_values}\n")
-
-
-
-    
-        
-
