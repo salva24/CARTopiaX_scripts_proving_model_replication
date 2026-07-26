@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-INPUT_FILE = "no_treatment_no_cup_2800_72h.csv"
+INPUT_FILE = "no_treatment_no_cup_28000_24h.csv"
 POLYNOMIAL_DEGREE = 3
 NORMALIZE_CYLINDER = True
 
@@ -31,9 +31,15 @@ Y_MIN = 0
 Y_MAX = 200
 
 N_SAMPLES = 20
+#the implicit number of sections that are present in the original data for scaling
+CALIBRATION_N_SECTIONS = 100
 
 COMPUTE_TOTAL_NUMBER = True
 
+Y_MIN_SCALED = 0
+Y_MAX_SCALED = 200
+
+rescale_factor = CALIBRATION_N_SECTIONS / N_SAMPLES
 
 df = pd.read_csv(
     INPUT_FILE,
@@ -63,26 +69,44 @@ y_sample = model(x_sample)
 y_sample = np.clip(y_sample, Y_MIN, None)
 
 plt.figure(figsize=(6, 4))
-plt.scatter(x, y, s=10, label="Data")
-plt.plot(x_sample, y_sample, "r", lw=2, label="Polynomial fit")
+plt.scatter(x, y, s=10, c="r", label="Data")
+plt.plot(x_sample, y_sample, color="green", lw=2, label="Polynomial fit")
 plt.xlim(X_MIN, X_MAX)
 plt.ylim(Y_MIN, Y_MAX)
 plt.xlabel("X")
 plt.ylabel("Y")
-plt.plot(x_sample, y_sample, "r", lw=2, label=f"Polynomial (degree={POLYNOMIAL_DEGREE})")
+plt.plot(x_sample, y_sample, color="green", lw=2, label=f"Polynomial (degree={POLYNOMIAL_DEGREE})")
 plt.grid(True)
 plt.title(os.path.splitext(INPUT_FILE)[0]+" - Polynomial Fit")
 #store the image
 plt.savefig(os.path.splitext(INPUT_FILE)[0] + "_polynomial_fit.png", dpi=300, bbox_inches='tight')
 
+#if the N_samples is different from the calibration sections, we need to rescale the y_sample values
+y_sample_scaled = y_sample * rescale_factor
+
 output_file = os.path.splitext(INPUT_FILE)[0] + "_clean.csv"
 
 pd.DataFrame({
     "X": x_sample,
-    "Y": y_sample
+    "Y": y_sample_scaled
 }).to_csv(output_file, index=False)
 
 print(f"Saved: {output_file}")
+
+# Plot the new scaled data
+plt.figure(figsize=(6, 4))
+plt.plot(x_sample, y_sample_scaled, color="green", lw=2, marker="o", label=f"Scaled ({N_SAMPLES} samples)")
+plt.xlim(X_MIN, X_MAX)
+plt.xlabel("X")
+plt.ylabel("Y (scaled)")
+plt.title(os.path.splitext(INPUT_FILE)[0] + f" - Scaled ({N_SAMPLES} samples)")
+plt.grid(True)
+if Y_MIN_SCALED is not None or Y_MAX_SCALED is not None:
+    plt.ylim(bottom=Y_MIN_SCALED, top=Y_MAX_SCALED)
+plt.legend()
+scaled_plot_file = os.path.splitext(INPUT_FILE)[0] + "_scaled_" + str(N_SAMPLES) + "_samples.png"
+plt.savefig(scaled_plot_file, dpi=300, bbox_inches='tight')
+print(f"Saved: {scaled_plot_file}")
 
 if NORMALIZE_CYLINDER:
     w = (X_MAX - X_MIN) / N_SAMPLES
@@ -91,10 +115,10 @@ if NORMALIZE_CYLINDER:
     r_out = edges[1:]
     ring_area = np.pi * (r_out**2 - r_in**2)
 
-    y_sample_normalized = y_sample / ring_area
+    y_sample_normalized = y_sample_scaled / ring_area
 
     plt.figure(figsize=(6, 4))
-    plt.plot(x_sample, y_sample_normalized, "g", lw=2)
+    plt.plot(x_sample, y_sample_normalized, color="green", lw=2)
     plt.title(os.path.splitext(INPUT_FILE)[0]+" - Density Distribution")
     plt.xlim(X_MIN, X_MAX)
     plt.xlabel("X (radius)")
@@ -113,13 +137,13 @@ if NORMALIZE_CYLINDER:
     print(f"Saved: {output_file_normalized}")
 
 if COMPUTE_TOTAL_NUMBER:
-    num_samples=100
+    num_samples=CALIBRATION_N_SECTIONS
     x_sample = np.linspace(X_MIN, X_MAX, num_samples)
     y_sample = model(x_sample)
     y_sample = np.clip(y_sample, Y_MIN, None)
 
     sum_values = np.sum(y_sample)
 
-    output_file_sum = os.path.splitext(INPUT_FILE)[0] + "_sum_values_100_split.txt"
+    output_file_sum = os.path.splitext(INPUT_FILE)[0] + "_sum_values_"+str(CALIBRATION_N_SECTIONS)+"_split.txt"
     with open(output_file_sum, "w") as f:
         f.write(f"Sum of values: {sum_values}\n")
