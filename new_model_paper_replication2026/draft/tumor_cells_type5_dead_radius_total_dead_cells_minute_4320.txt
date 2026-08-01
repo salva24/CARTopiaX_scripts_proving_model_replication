@@ -1,0 +1,5 @@
+Attribute: tumor_cells_type5_dead_radius
+Minute: 4320
+Number of original radial bins: 20
+Number of resampled points: 20
+Total dead cells (sum of resampled polynomial): 2942.7239826946416

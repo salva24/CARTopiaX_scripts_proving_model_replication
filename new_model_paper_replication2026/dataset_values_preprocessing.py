@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-INPUT_FILE = "no_treatment_no_cup_28000_24h.csv"
+INPUT_FILE = "data/no_treatment_no_cup_28000_72h.csv"
 POLYNOMIAL_DEGREE = 3
 NORMALIZE_CYLINDER = True
 
@@ -34,12 +34,12 @@ N_SAMPLES = 20
 #the implicit number of sections that are present in the original data for scaling
 CALIBRATION_N_SECTIONS = 100
 
-COMPUTE_TOTAL_NUMBER = True
+COMPUTE_TOTAL_NUMBER = False
 
 Y_MIN_SCALED = 0
-Y_MAX_SCALED = 200
+Y_MAX_SCALED = None
 
-rescale_factor = CALIBRATION_N_SECTIONS / N_SAMPLES
+rescale_factor = CALIBRATION_N_SECTIONS / N_SAMPLES #1.0 for oxygen levels
 
 df = pd.read_csv(
     INPUT_FILE,
