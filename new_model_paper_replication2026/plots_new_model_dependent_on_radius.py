@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 # CONFIGURATION: edit only this section
 # ---------------------------------------------------------------------------
  
-BASE_DIR = './data/CARTopiaX_matching_absolute_sum_radius_shortened'      # Base folder containing the subfolders
+BASE_DIR = './data/with_cup_28000_real_oxygen'      # Base folder containing the subfolders
 CSV_NAME = 'data_dependent_on_radius_tumor.csv'       # CSV filename inside each subfolder
 FOLDER_PATTERN = 'execution_seed_*'                   # Pattern used to find the subfolders
  
@@ -25,9 +25,9 @@ MINUTE = 4320                                         # Timestamp (in minutes) t
 ATTRIBUTE = 'num_dead_cells_radius'           # Attribute (column prefix) to plot
 # Other examples: "average_oxygen_all_cells_radius", "average_oxygen_cancer_cells_radius",
 # "num_alive_cells_radius", "num_alive_tumor_cells_radius", etc. 'num_dead_cells_radius'  
- 
+
 DIVIDING_FACTOR = 1 #585                                  # Divide values by this factor #585 to convert from mmHg to mol/m3
-APPLY_RADIAL_NORMALIZATION = False                    # Divide each value by its ring area (per um^2)
+APPLY_RADIAL_NORMALIZATION = True                    # Divide each value by its ring area (per um^2)
  
 Y_MIN = 0
 Y_MAX = None

@@ -8,9 +8,9 @@ import matplotlib.pyplot as plt
 # CONFIGURATION: edit only this section
 # ---------------------------------------------------------------------------
 
-BASE_DIR = './with_cup_no_aging_28000_real_oxygen'                                        # Base folder containing the subfolders 
+BASE_DIR = './data/no_cup_no_aging_2800_real_oxygen'                                        # Base folder containing the subfolders 
 CSV_NAME = 'final_data.csv'                          # CSV filename inside each subfolder
-FIELD = 'tumor_cells_type5_dead'                            # Column (field) to plot
+FIELD = 'num_tumor_cells'                            # Column (field) to plot
 TIME_FIELD = 'total_days'                            # Time column
 
 FOLDER_PATTERN = 'execution_seed_*'                  # Pattern used to find the subfolders

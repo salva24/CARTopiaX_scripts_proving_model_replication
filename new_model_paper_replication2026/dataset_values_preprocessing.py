@@ -30,14 +30,19 @@ X_MAX = 3000
 Y_MIN = 0
 Y_MAX = 200
 
+Y_MIN_NORMALIZED = 0
+Y_MAX_NORMALIZED = 0.0004
+
 N_SAMPLES = 20
 #the implicit number of sections that are present in the original data for scaling
 CALIBRATION_N_SECTIONS = 100
 
-COMPUTE_TOTAL_NUMBER = False
+COMPUTE_TOTAL_NUMBER = True
 
 Y_MIN_SCALED = 0
 Y_MAX_SCALED = None
+
+PONDERATION_FIRST_POINT = 1
 
 rescale_factor = CALIBRATION_N_SECTIONS / N_SAMPLES #1.0 for oxygen levels
 
@@ -61,7 +66,11 @@ order = np.argsort(x)
 x = x[order]
 y = y[order]
 
-coeffs = np.polyfit(x, y, POLYNOMIAL_DEGREE)
+weights = np.ones_like(y)
+weights[0] = PONDERATION_FIRST_POINT
+
+coeffs = np.polyfit(x, y, POLYNOMIAL_DEGREE, w=weights)
+
 model = np.poly1d(coeffs)
 
 x_sample = np.linspace(X_MIN, X_MAX, N_SAMPLES)
@@ -121,6 +130,7 @@ if NORMALIZE_CYLINDER:
     plt.plot(x_sample, y_sample_normalized, color="green", lw=2)
     plt.title(os.path.splitext(INPUT_FILE)[0]+" - Density Distribution")
     plt.xlim(X_MIN, X_MAX)
+    plt.ylim(Y_MIN_NORMALIZED, Y_MAX_NORMALIZED)
     plt.xlabel("X (radius)")
     plt.ylabel("Density")
     plt.grid(True)
