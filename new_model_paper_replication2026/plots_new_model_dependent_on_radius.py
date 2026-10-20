@@ -100,8 +100,6 @@ def extract_radial_profile(df, time_column, minute, attribute, apply_radial_norm
         r_out = np.array([p[2] for p in points], dtype=float)
         ring_area = np.pi * (r_out ** 2 - r_in ** 2)
 
-        print(raw_values)#Debug
-        
         raw_values = raw_values / ring_area
         
  
