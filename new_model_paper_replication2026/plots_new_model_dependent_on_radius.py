@@ -15,22 +15,26 @@ import matplotlib.pyplot as plt
 # CONFIGURATION: edit only this section
 # ---------------------------------------------------------------------------
  
-BASE_DIR = './data/temp2_allCart_no_cup'      # Base folder containing the subfolders
+BASE_DIR = './data/last_treatment_cup'#new_no_treat_for_5000 #15494 #delete_me #250     # Base folder containing the subfolders
 CSV_NAME = 'data_dependent_on_radius_tumor.csv'       # CSV filename inside each subfolder
 FOLDER_PATTERN = 'execution_seed_*'                   # Pattern used to find the subfolders
  
 TIME_COLUMN = 'total_minutes'                         # Column used to select the timestamp
-MINUTE = 4320                                         # Timestamp (in minutes) to plot
+MINUTE = 4320                                    # Timestamp (in minutes) to plot
  
-ATTRIBUTE = 'tumor_cells_type5_dead_radius' # "num_alive_cart_cells_radius"  #'tumor_cells_type5_dead_radius'           # Attribute (column prefix) to plot
-# Other examples: "average_oxygen_all_cells_radius", "average_oxygen_cancer_cells_radius",
+ATTRIBUTE = 'tumor_cells_type5_dead_radius' # "num_alive_cart_cells_radius"  #'tumor_cells_type5_dead_radius'  "average_oxygen_cancer_cells_radius"         
+# "dead_tumor_cells_cartcell_kill_radius"
+# Other examples: "average_oxygen_cancer_cells_radius", "dead_tumor_cells_random_natural_causes_radius" "dead_tumor_cells_lack_of_glucose_radius" "dead_tumor_cells_lack_of_oxygen_radius"
 # "num_alive_cells_radius", "num_alive_tumor_cells_radius", etc. 'num_dead_cells_radius'  
 
-DIVIDING_FACTOR =1 # 585                                  # Divide values by this factor #585 to convert from mmHg to mol/m3
-APPLY_RADIAL_NORMALIZATION = False                    # Divide each value by its ring area (per um^2)
- 
+DIVIDING_FACTOR = 1 #1 #585                                  # Divide values by this factor #585 to convert from mmHg to mol/m3
+APPLY_RADIAL_NORMALIZATION = False                    # Divide each value by its ring area (per um^2). Set to False for meassuring oxygen or glucose levels
+X_MIN = 0                                           # Points with radius below this value are ignored (None to keep all). Set to 150 to avoid the noisy inner points when APPLY_RADIAL_NORMALIZATION is True
+
+
 Y_MIN = 0
-Y_MAX = None
+Y_MAX = 180#180 # Set to 0.0004 when APPLY_RADIAL_NORMALIZATION is True to zoom in on the relevant range of values. Set to 0.2 for oxygen
+
  
 OUTPUT_DIR = './out'                                  # Folder where the figure is saved
 OUTPUT_NAME = f'{ATTRIBUTE}_vs_radius_mean_std{"_relative" if APPLY_RADIAL_NORMALIZATION else "_absolute"}.png'   # Output file name
@@ -95,7 +99,11 @@ def extract_radial_profile(df, time_column, minute, attribute, apply_radial_norm
         r_in = np.array([p[1] for p in points], dtype=float)
         r_out = np.array([p[2] for p in points], dtype=float)
         ring_area = np.pi * (r_out ** 2 - r_in ** 2)
+
+        print(raw_values)#Debug
+        
         raw_values = raw_values / ring_area
+        
  
     return radii, raw_values
  
@@ -139,6 +147,10 @@ def main():
     if radii is None:
         print("No data found to plot.")
         return
+
+    if X_MIN is not None:
+        x_mask = radii >= X_MIN
+        radii, mean_values, std_values = radii[x_mask], mean_values[x_mask], std_values[x_mask]
  
     print(f"Attribute: {ATTRIBUTE}")
     print(f"Minute: {MINUTE}")
@@ -163,6 +175,12 @@ def main():
  
     if Y_MIN is not None or Y_MAX is not None:
         ax.set_ylim(bottom=Y_MIN, top=Y_MAX)
+
+    if X_MIN is not None:
+        ax.set_xlim(left=X_MIN)
+        # Explicitly mark where the X axis starts
+        x_ticks = [t for t in ax.get_xticks() if X_MIN < t <= ax.get_xlim()[1]]
+        ax.set_xticks([X_MIN] + x_ticks)
  
     plt.tight_layout()
     output_path = os.path.join(OUTPUT_DIR, OUTPUT_NAME)
