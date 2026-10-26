@@ -4,6 +4,8 @@ This repository contains the scripts used to validate and compare simulation res
 These tools ensure the **scientific validity** and **reproducibility** of the performance evaluation and figures associated with the **CARTopiaX** project, developed during **Google Summer of Code 2025** with the **CERN HEP Software Foundation (HSF)**.  
 This allows users to independently verify that the reported improvements are objectively supported by the data.
 
+> **Update, GSoC 2026:** the folder [`new_model_paper_replication2026/`](new_model_paper_replication2026/) contains the scripts for the follow-up work of **Google Summer of Code 2026**, in which CARTopiaX is extended to replicate the wet lab experiments of [Ando et al., *Evaluating CAR-T Cell Therapy in a Hypoxic 3D Tumor Model*, Advanced Healthcare Materials (2019)](https://doi.org/10.1002/adhm.201900001). It includes the preprocessing of the data digitized from the paper (spline fits and radial normalization) and the plots comparing the extended CARTopiaX model against it (cell deaths by cause, glucose, radial profiles, etc.). The rest of this README describes the original GSoC 2025 comparison with CART-ABM.
+
 ## Overview
 
 The comparison evaluates both **accuracy** (results alignment) and **performance** (execution time) between the two CAR T-cell therapy simulation models.
@@ -81,6 +83,7 @@ Performance comparison plots will be generated showing execution time difference
 │   ├── data_results_CART-ABM/      # CART-ABM output CSVs
 │   └── execution_times.csv         # Performance timing data
 ├── out/                             # Generated comparison plots
+├── new_model_paper_replication2026/ # GSoC 2026: replication of Ando et al. (2019)
 ├── replication_plots_and_data.zip   # Experimental data and plots
 ├── results_comparison.py            # Results comparison script
 └── execution_times.py               # Performance comparison script

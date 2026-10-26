@@ -1,24 +1,26 @@
-import os
 import glob
+import os
+
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 
 # ---------------------------------------------------------------------------
 # CONFIGURATION: edit only this section
 # ---------------------------------------------------------------------------
 
-BASE_DIR = './data/no_cup_no_aging_2800_real_oxygen'                                        # Base folder containing the subfolders 
-CSV_NAME = 'final_data.csv'                          # CSV filename inside each subfolder
-FIELD = 'num_tumor_cells'                            # Column (field) to plot
-TIME_FIELD = 'total_days'                            # Time column
+BASE_DIR = './data/last_no_treatment_cap'             # Base folder containing the subfolders
+CSV_NAME = 'final_data.csv'                           # CSV filename inside each subfolder
+# Column (field) to plot. Other examples: "average_glucose_all_cells", 'num_tumor_cells', tumor_cells_type5_dead
+FIELD = "dead_tumor_cells_lack_of_glucose"
+TIME_FIELD = 'total_days'                             # Time column
 
-FOLDER_PATTERN = 'execution_seed_*'                  # Pattern used to find the subfolders
-OUTPUT_DIR = './out'                                 # Folder where the figure is saved
-OUTPUT_NAME = f'{FIELD}_mean_std.png'         
+FOLDER_PATTERN = 'execution_seed_*'                   # Pattern used to find the subfolders
+OUTPUT_DIR = './out'                                  # Folder where the figure is saved
+OUTPUT_NAME = f'{FIELD}_mean_std.png'                 # Output file name
 
 # ---------------------------------------------------------------------------
-       # Output file name
+
 plt.rcParams.update({
     'font.size': 16,
     'axes.titlesize': 20,
@@ -85,10 +87,10 @@ def main():
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.plot(time_points, mean_values, color='blue', linewidth=2,
             label=f'{FIELD} (Mean)')
-    ax.fill_between(time_points,
-                     mean_values - std_values,
-                     mean_values + std_values,
-                     color='blue', alpha=0.2, label='Mean ± Std')
+    # ax.fill_between(time_points,
+    #                  mean_values - std_values,
+    #                  mean_values + std_values,
+    #                  color='blue', alpha=0.2, label='Mean ± Std')
 
     ax.set_xlabel('Time (days)')
     ax.set_ylabel(FIELD)

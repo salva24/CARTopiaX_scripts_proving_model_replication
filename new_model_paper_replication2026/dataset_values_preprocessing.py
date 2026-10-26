@@ -24,28 +24,28 @@ from scipy.interpolate import UnivariateSpline
 
 INPUT_DIR = "data/data_paper"
 SPLINE_DEGREE = 3
-#smoothing factor: 0 interpolates every point, larger values give smoother curves, None uses scipy's default
+# Smoothing factor: 0 interpolates every point, larger values give smoother curves, None uses scipy's default
 SPLINE_SMOOTHING = 1000
-NORMALIZE_CYLINDER = True # False for oxygen
+NORMALIZE_CYLINDER = True  # False for oxygen
 
 X_MIN = 0
 X_MAX = 3000
 Y_MIN = 0
-Y_MAX = 200 #0.2 for oxygen
+Y_MAX = 200  # 0.2 for oxygen
 
 Y_MIN_SCALED = 0
-Y_MAX_SCALED = 180 #0.2 for oxygen
+Y_MAX_SCALED = 180  # 0.2 for oxygen
 
 Y_MIN_SPLINE_FIT = 0
-Y_MAX_SPLINE_FIT = 180 #0.2 for oxygen
+Y_MAX_SPLINE_FIT = 180  # 0.2 for oxygen
 
 Y_MIN_NORMALIZED = 0
 Y_MAX_NORMALIZED = 0.0004
-#the density plot ignores the points with X below this value
+# The density plot ignores the points with X below this value
 X_MIN_DENSITY = 150
 
 N_SAMPLES = 100
-#the implicit number of sections that are present in the original data for scaling
+# The implicit number of sections that are present in the original data for scaling
 CALIBRATION_N_SECTIONS = 100
 
 COMPUTE_TOTAL_NUMBER = True
@@ -55,7 +55,7 @@ rescale_factor = CALIBRATION_N_SECTIONS / N_SAMPLES
 
 def process_file(input_file):
     name = os.path.splitext(os.path.basename(input_file))[0]
-    #outputs are stored in a subfolder named after the input file
+    # Outputs are stored in a subfolder named after the input file
     output_dir = os.path.join(os.path.dirname(input_file), name)
     os.makedirs(output_dir, exist_ok=True)
     output_prefix = os.path.join(output_dir, name)
@@ -80,7 +80,7 @@ def process_file(input_file):
     x = x[order]
     y = y[order]
 
-    #outside the data range the spline keeps the boundary value instead of extrapolating
+    # Outside the data range the spline keeps the boundary value instead of extrapolating
     model = UnivariateSpline(x, y, k=SPLINE_DEGREE, s=SPLINE_SMOOTHING, ext="const")
 
     x_sample = np.linspace(X_MIN, X_MAX, N_SAMPLES)
@@ -96,13 +96,13 @@ def process_file(input_file):
     plt.ylabel("Y")
     plt.grid(True)
     plt.legend()
-    plt.title(name+" - Spline Fit")
-    #store the image
+    plt.title(name + " - Spline Fit")
+    # Store the image
     plt.savefig(output_prefix + "_spline_fit.png", dpi=300, bbox_inches='tight')
     plt.close()
     print(f"Saved: {output_prefix + '_spline_fit.png'}")
 
-    #if the N_samples is different from the calibration sections, we need to rescale the y_sample values
+    # If the N_samples is different from the calibration sections, we need to rescale the y_sample values
     y_sample_scaled = y_sample * rescale_factor
 
     output_file = output_prefix + "_clean.csv"
@@ -142,16 +142,16 @@ def process_file(input_file):
         plt.figure(figsize=(6, 4))
         density_mask = x_sample >= X_MIN_DENSITY
         plt.plot(x_sample[density_mask], y_sample_normalized[density_mask], color="green", lw=2)
-        plt.title(name+" - Density Distribution")
+        plt.title(name + " - Density Distribution")
         plt.xlim(X_MIN_DENSITY, X_MAX)
-        #explicitly mark where the X axis starts
+        # Explicitly mark where the X axis starts
         density_ticks = [t for t in plt.xticks()[0] if X_MIN_DENSITY < t <= X_MAX]
         plt.xticks([X_MIN_DENSITY] + density_ticks)
         plt.ylim(Y_MIN_NORMALIZED, Y_MAX_NORMALIZED)
         plt.xlabel("X (radius)")
         plt.ylabel("Density")
         plt.grid(True)
-        #store the image
+        # Store the image
         plt.savefig(output_prefix + "_density_distribution.png", dpi=300, bbox_inches='tight')
         plt.close()
         print(f"Saved: {output_prefix + '_density_distribution.png'}")
@@ -165,14 +165,14 @@ def process_file(input_file):
         print(f"Saved: {output_file_normalized}")
 
     if COMPUTE_TOTAL_NUMBER:
-        num_samples=CALIBRATION_N_SECTIONS
+        num_samples = CALIBRATION_N_SECTIONS
         x_sample = np.linspace(X_MIN, X_MAX, num_samples)
         y_sample = model(x_sample)
         y_sample = np.clip(y_sample, Y_MIN, None)
 
         sum_values = np.sum(y_sample)
 
-        output_file_sum = output_prefix + "_sum_values_"+str(CALIBRATION_N_SECTIONS)+"_split.txt"
+        output_file_sum = output_prefix + "_sum_values_" + str(CALIBRATION_N_SECTIONS) + "_split.txt"
         with open(output_file_sum, "w") as f:
             f.write(f"Sum of values: {sum_values}\n")
 

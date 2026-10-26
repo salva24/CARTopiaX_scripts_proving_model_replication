@@ -14,14 +14,12 @@ from plots_new_model_dependent_on_radius import (
 # CONFIGURATION: edit only this section
 # ---------------------------------------------------------------------------
 
-BASE_DIR = './data/last_no_treatment_cup'                # Base folder containing the subfolders
+BASE_DIR = './data/last_treatment_cap'                # Base folder containing the subfolders
 CSV_NAME = 'data_dependent_on_radius_tumor.csv'       # CSV filename inside each subfolder
 FOLDER_PATTERN = 'execution_seed_*'                   # Pattern used to find the subfolders
 
 TIME_COLUMN = 'total_minutes'                         # Column used to select the timestamp
 MINUTE = 4320                                         # Timestamp (in minutes) to plot
-
-DIVIDING_FACTOR = 1                                   # Divide values by this factor
 
 # Death causes: column prefix -> legend label
 DEATH_CAUSES = {
@@ -64,7 +62,7 @@ def plot_death_percentages(dataframes, x_min):
     radii = None
     for attribute, label in DEATH_CAUSES.items():
         radii, mean_values, _ = compute_mean_std_over_radius(
-            dataframes, TIME_COLUMN, MINUTE, attribute, False, DIVIDING_FACTOR
+            dataframes, TIME_COLUMN, MINUTE, attribute, False, 1
         )
         means[label] = mean_values
 
@@ -111,7 +109,7 @@ def plot_death_causes(dataframes, apply_radial_normalization, x_min, y_min, y_ma
     for attribute, label in DEATH_CAUSES.items():
         radii, mean_values, std_values = compute_mean_std_over_radius(
             dataframes, TIME_COLUMN, MINUTE, attribute,
-            apply_radial_normalization, DIVIDING_FACTOR
+            apply_radial_normalization, 1
         )
 
         if x_min is not None:
