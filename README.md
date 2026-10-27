@@ -4,7 +4,18 @@ This repository contains the scripts used to validate and compare simulation res
 These tools ensure the **scientific validity** and **reproducibility** of the performance evaluation and figures associated with the **CARTopiaX** project, developed during **Google Summer of Code 2025** with the **CERN HEP Software Foundation (HSF)**.  
 This allows users to independently verify that the reported improvements are objectively supported by the data.
 
-> **Update, GSoC 2026:** the folder [`new_model_paper_replication2026/`](new_model_paper_replication2026/) contains the scripts for the follow-up work of **Google Summer of Code 2026**, in which CARTopiaX is extended to replicate the wet lab experiments of [Ando et al., *Evaluating CAR-T Cell Therapy in a Hypoxic 3D Tumor Model*, Advanced Healthcare Materials (2019)](https://doi.org/10.1002/adhm.201900001). It includes the preprocessing of the data digitized from the paper (spline fits and radial normalization) and the plots comparing the extended CARTopiaX model against it (cell deaths by cause, glucose, radial profiles, etc.). The rest of this README describes the original GSoC 2025 comparison with CART-ABM.
+> **Update, GSoC 2026:** the folder [`new_model_paper_replication2026/`](new_model_paper_replication2026/) contains the scripts for the follow-up work of **Google Summer of Code 2026**, in which CARTopiaX is extended to replicate the wet lab experiments of [Ando et al., *Evaluating CAR-T Cell Therapy in a Hypoxic 3D Tumor Model*, Advanced Healthcare Materials (2019)](https://doi.org/10.1002/adhm.201900001):
+>
+> - `dataset_values_preprocessing.py`: fits a spline to the data digitized from the paper, resamples it into radial sections and then normalizes it by the area of each ring (density per um²) so it is comparable with the simulation output.
+> - `run_several_simulations.py`: runs CARTopiaX with several seeds and stores each execution in `out/execution_seed_<seed>/` (set `NUMBER_EXECUTIONS`, `EXPORT_VISUALIZATION` and `BIODYNAMO_ENV_SCRIPT` at the top; it restores `params.json` and `bdm.toml` afterwards).
+> - `plots_new_model_final_data.py`: mean (and std) over seeds of a final-data field over time.
+> - `plots_new_model_dependent_on_radius.py`: mean and std over seeds of a field as a function of radius, in absolute counts or normalized by ring area.
+> - `plot_cell_deaths.py`: tumor cell deaths by cause vs radius (absolute, per um² and percentage).
+> - `glucose_vs_deaths.py`: average glucose against dead cells over time, with and without treatment.
+> - `cartopiax_vs_paper_gsoc2026.py`: compares the simulated dead tumor cells against the paper (raw points and area-normalized spline) at 24h, 48h and 72h.
+> - `replication_plots_and_data.zip`: data (`data_paper` and the four simulated scenarios) and plots of this work. Extract it into `new_model_paper_replication2026/`.
+>
+> The rest of this README describes the original GSoC 2025 comparison with CART-ABM.
 
 ## Overview
 

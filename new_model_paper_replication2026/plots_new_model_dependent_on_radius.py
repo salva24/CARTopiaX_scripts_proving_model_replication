@@ -10,7 +10,7 @@ import pandas as pd
 # CONFIGURATION: edit only this section
 # ---------------------------------------------------------------------------
 
-BASE_DIR = './data/last_treatment_cap'                # Base folder containing the subfolders
+BASE_DIR = './data/last_no_treatment_no_cap'                # Base folder containing the subfolders
 CSV_NAME = 'data_dependent_on_radius_tumor.csv'       # CSV filename inside each subfolder
 FOLDER_PATTERN = 'execution_seed_*'                   # Pattern used to find the subfolders
 
